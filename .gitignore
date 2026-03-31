@@ -1,6 +1,9 @@
-node_modules/
+__pycache__/
+*.pyc
+*.egg-info/
 dist/
-coverage/
+build/
+.pytest_cache/
 .env
 .DS_Store
 *.log
