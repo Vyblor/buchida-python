@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/logo-black.svg" alt="buchida" width="280" />
-  <p><strong>Developer-first email API with CJK support</strong></p>
+  <p><strong>支持CJK的开发者优先邮件API</strong></p>
 
   [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
@@ -9,9 +9,9 @@
 
 ---
 
-The official Python SDK for the [buchida](https://buchida.com) email API.
+[buchida](https://buchida.com)邮件API的官方Python SDK。
 
-## Installation
+## 安装
 
 ```bash
 pip install buchida
@@ -21,7 +21,7 @@ pip install buchida
 poetry add buchida
 ```
 
-## Quick Start
+## 快速开始
 
 ```python
 from buchida import Buchida
@@ -31,26 +31,26 @@ client = Buchida("bc_live_xxxxxxxxxxxxxxxxxxxxx")
 result = client.emails.send(
     from_="hello@yourdomain.com",
     to="user@example.com",
-    subject="Welcome to buchida!",
-    html="<h1>Hello!</h1><p>Welcome aboard.</p>",
+    subject="欢迎使用buchida！",
+    html="<h1>你好！</h1><p>欢迎加入。</p>",
 )
 
-print(f"Email sent: {result['id']}")
+print(f"邮件发送成功: {result['id']}")
 ```
 
-## Features
+## 特性
 
-- Full type hints
-- Zero dependencies (stdlib `urllib`)
+- 完整的类型提示
+- 零依赖（标准库`urllib`）
 - Python 3.10+
-- Typed dataclass responses
+- 类型化dataclass响应
 
-## Documentation
+## 文档
 
-- [Quick Start](https://buchida.com/docs/quickstart)
-- [API Reference](https://buchida.com/docs/sending-email)
+- [快速开始](https://buchida.com/zh/docs/quickstart)
+- [API参考](https://buchida.com/zh/docs/sending-email)
 - [GitHub](https://github.com/Vyblor/buchida-python)
 
-## License
+## 许可证
 
 MIT

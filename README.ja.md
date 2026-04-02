@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/logo-black.svg" alt="buchida" width="280" />
-  <p><strong>Developer-first email API with CJK support</strong></p>
+  <p><strong>CJKサポートを備えた開発者向けメールAPI</strong></p>
 
   [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
@@ -9,9 +9,9 @@
 
 ---
 
-The official Python SDK for the [buchida](https://buchida.com) email API.
+[buchida](https://buchida.com)メールAPIの公式Python SDKです。
 
-## Installation
+## インストール
 
 ```bash
 pip install buchida
@@ -21,7 +21,7 @@ pip install buchida
 poetry add buchida
 ```
 
-## Quick Start
+## クイックスタート
 
 ```python
 from buchida import Buchida
@@ -31,26 +31,26 @@ client = Buchida("bc_live_xxxxxxxxxxxxxxxxxxxxx")
 result = client.emails.send(
     from_="hello@yourdomain.com",
     to="user@example.com",
-    subject="Welcome to buchida!",
-    html="<h1>Hello!</h1><p>Welcome aboard.</p>",
+    subject="buchidaへようこそ！",
+    html="<h1>こんにちは！</h1><p>ご登録ありがとうございます。</p>",
 )
 
-print(f"Email sent: {result['id']}")
+print(f"メール送信完了: {result['id']}")
 ```
 
-## Features
+## 特徴
 
-- Full type hints
-- Zero dependencies (stdlib `urllib`)
+- 完全な型ヒントサポート
+- 依存関係ゼロ（標準ライブラリ`urllib`）
 - Python 3.10+
-- Typed dataclass responses
+- 型付きdataclassレスポンス
 
-## Documentation
+## ドキュメント
 
-- [Quick Start](https://buchida.com/docs/quickstart)
-- [API Reference](https://buchida.com/docs/sending-email)
+- [クイックスタート](https://buchida.com/ja/docs/quickstart)
+- [APIリファレンス](https://buchida.com/ja/docs/sending-email)
 - [GitHub](https://github.com/Vyblor/buchida-python)
 
-## License
+## ライセンス
 
 MIT

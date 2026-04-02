@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/logo-black.svg" alt="buchida" width="280" />
-  <p><strong>Developer-first email API with CJK support</strong></p>
+  <p><strong>CJK 지원을 갖춘 개발자 중심 이메일 API</strong></p>
 
   [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
 
@@ -9,9 +9,9 @@
 
 ---
 
-The official Python SDK for the [buchida](https://buchida.com) email API.
+[buchida](https://buchida.com) 이메일 API의 공식 Python SDK입니다.
 
-## Installation
+## 설치
 
 ```bash
 pip install buchida
@@ -21,7 +21,7 @@ pip install buchida
 poetry add buchida
 ```
 
-## Quick Start
+## 빠른 시작
 
 ```python
 from buchida import Buchida
@@ -31,26 +31,26 @@ client = Buchida("bc_live_xxxxxxxxxxxxxxxxxxxxx")
 result = client.emails.send(
     from_="hello@yourdomain.com",
     to="user@example.com",
-    subject="Welcome to buchida!",
-    html="<h1>Hello!</h1><p>Welcome aboard.</p>",
+    subject="buchida에 오신 것을 환영합니다!",
+    html="<h1>안녕하세요!</h1><p>가입을 환영합니다.</p>",
 )
 
-print(f"Email sent: {result['id']}")
+print(f"이메일 발송 완료: {result['id']}")
 ```
 
-## Features
+## 주요 기능
 
-- Full type hints
-- Zero dependencies (stdlib `urllib`)
+- 완전한 타입 힌트 지원
+- 의존성 없음 (표준 라이브러리 `urllib`)
 - Python 3.10+
-- Typed dataclass responses
+- 타입이 지정된 dataclass 응답
 
-## Documentation
+## 문서
 
-- [Quick Start](https://buchida.com/docs/quickstart)
-- [API Reference](https://buchida.com/docs/sending-email)
+- [빠른 시작 가이드](https://buchida.com/ko/docs/quickstart)
+- [API 레퍼런스](https://buchida.com/ko/docs/sending-email)
 - [GitHub](https://github.com/Vyblor/buchida-python)
 
-## License
+## 라이선스
 
 MIT
