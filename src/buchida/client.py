@@ -170,12 +170,14 @@ class _Domains:
         self._client = client
 
     def create(self, *, name: str) -> Domain:
-        data = self._client._request("POST", "/domains", {"name": name})
+        resp = self._client._request("POST", "/domains", {"name": name})
+        data = resp.get("data", resp) if isinstance(resp, dict) and "data" in resp else resp
         return Domain.from_dict(data)
 
     def list(self) -> list[Domain]:
-        data = self._client._request("GET", "/domains")
-        return [Domain.from_dict(d) for d in data]
+        resp = self._client._request("GET", "/domains")
+        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        return [Domain.from_dict(d) for d in items]
 
     def get(self, domain_id: str) -> Domain:
         data = self._client._request("GET", f"/domains/{domain_id}")
@@ -197,8 +199,9 @@ class _ApiKeys:
         return ApiKey.from_dict(data)
 
     def list(self) -> list[ApiKey]:
-        data = self._client._request("GET", "/api-keys")
-        return [ApiKey.from_dict(d) for d in data]
+        resp = self._client._request("GET", "/api-keys")
+        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        return [ApiKey.from_dict(d) for d in items]
 
     def delete(self, key_id: str) -> None:
         self._client._request("DELETE", f"/api-keys/{key_id}")
@@ -215,8 +218,9 @@ class _Webhooks:
         return Webhook.from_dict(data)
 
     def list(self) -> list[Webhook]:
-        data = self._client._request("GET", "/webhooks")
-        return [Webhook.from_dict(d) for d in data]
+        resp = self._client._request("GET", "/webhooks")
+        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        return [Webhook.from_dict(d) for d in items]
 
     def delete(self, webhook_id: str) -> None:
         self._client._request("DELETE", f"/webhooks/{webhook_id}")
@@ -227,8 +231,9 @@ class _Templates:
         self._client = client
 
     def list(self) -> list[Template]:
-        data = self._client._request("GET", "/templates")
-        return [Template.from_dict(d) for d in data]
+        resp = self._client._request("GET", "/templates")
+        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        return [Template.from_dict(d) for d in items]
 
     def get(self, template_id: str) -> Template:
         data = self._client._request("GET", f"/templates/{template_id}")

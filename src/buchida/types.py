@@ -78,9 +78,9 @@ class Domain:
         return cls(
             id=data["id"],
             name=data["name"],
-            status=data["status"],
-            records=data.get("records", []),
-            created_at=data["createdAt"],
+            status=data.get("status", "pending"),
+            records=data.get("records", data.get("dns_records", [])),
+            created_at=data.get("createdAt", data.get("created_at", "")),
         )
 
 
@@ -96,9 +96,9 @@ class ApiKey:
     def from_dict(cls, data: dict[str, Any]) -> ApiKey:
         return cls(
             id=data["id"],
-            name=data["name"],
-            permission=data["permission"],
-            created_at=data["createdAt"],
+            name=data.get("name", ""),
+            permission=data.get("permission", data.get("key_permission", "")),
+            created_at=data.get("createdAt", data.get("created_at", "")),
             key=data.get("key"),
         )
 
@@ -114,9 +114,9 @@ class Webhook:
     def from_dict(cls, data: dict[str, Any]) -> Webhook:
         return cls(
             id=data["id"],
-            url=data["url"],
-            events=data["events"],
-            created_at=data["createdAt"],
+            url=data.get("url", ""),
+            events=data.get("events", []),
+            created_at=data.get("createdAt", data.get("created_at", "")),
         )
 
 
@@ -132,8 +132,8 @@ class Template:
     def from_dict(cls, data: dict[str, Any]) -> Template:
         return cls(
             id=data["id"],
-            name=data["name"],
-            created_at=data["createdAt"],
+            name=data.get("name", ""),
+            created_at=data.get("createdAt", data.get("created_at", "")),
             subject=data.get("subject"),
             html=data.get("html"),
         )
