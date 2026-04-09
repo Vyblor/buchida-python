@@ -23,7 +23,7 @@ from buchida.types import (
     Webhook,
 )
 
-DEFAULT_BASE_URL = "https://api.buchida.com"
+DEFAULT_BASE_URL = "https://api.buchida.com/v1"
 DEFAULT_TIMEOUT = 30
 
 
