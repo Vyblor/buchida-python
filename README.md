@@ -1,55 +1,46 @@
-<div align="center">
-  <img src="assets/logo-black.svg" alt="buchida" width="280" />
-  <p><strong>Developer-first email API with CJK support</strong></p>
+# buchida
 
-  [English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
+**buchida Python SDK — Email API for AI agents**
 
-  [![PyPI version](https://img.shields.io/pypi/v/buchida)](https://pypi.org/project/buchida/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-</div>
+buchida is the official Python SDK for **buchida** — an email API built for AI agents. buchida ships a CLI, an MCP server, and SDKs in 5 languages (Node, Python, Go, Ruby, Java), all sharing the same REST API surface. `@buchida/email` templates render Korean, Japanese, and Chinese natively.
 
----
-
-The official Python SDK for the [buchida](https://buchida.com) email API.
-
-## Installation
+## Install
 
 ```bash
 pip install buchida
 ```
 
-```bash
-poetry add buchida
-```
-
-## Quick Start
+## Send your first email
 
 ```python
-from buchida import Buchida
+import buchida
 
-client = Buchida("bc_live_xxxxxxxxxxxxxxxxxxxxx")
+client = buchida.Client(api_key=os.environ["BUCHIDA_API_KEY"])
 
-result = client.emails.send(
-    from_="hello@yourdomain.com",
+client.emails.send(
+    from_="hello@yourapp.com",
     to="user@example.com",
-    subject="Welcome to buchida!",
-    html="<h1>Hello!</h1><p>Welcome aboard.</p>",
+    subject="Hello",
+    html="<h1>Welcome</h1>",
 )
-
-print(f"Email sent: {result['id']}")
 ```
-
-## Features
-
-- Full type hints
-- Zero dependencies (stdlib `urllib`)
-- Python 3.10+
-- Typed dataclass responses
 
 ## Documentation
 
-- [Quick Start](https://buchida.com/docs/quickstart)
-- [API Reference](https://buchida.com/docs/sending-email)
-- [GitHub](https://github.com/Vyblor/buchida-python)
+Full docs: **[buchida.com/docs](https://buchida.com/docs)**
+
+- API reference: https://buchida.com/docs/api-reference
+- Quickstart guide: https://buchida.com/docs/quickstart
+- CJK email templates: https://buchida.com/docs/templates
+- MCP server setup: https://buchida.com/docs/mcp
+- CLI reference: https://buchida.com/docs/cli
+
+## Links
+
+- **Website:** [buchida.com](https://buchida.com)
+- **Documentation:** [buchida.com/docs](https://buchida.com/docs)
+- **Pricing:** [buchida.com/pricing](https://buchida.com/pricing)
+- **GitHub:** https://github.com/Vyblor/buchida-python
 
 ## License
 
