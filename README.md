@@ -1,6 +1,13 @@
-# buchida
+<div align="center">
+  <img src="assets/logo-black.svg" alt="buchida" width="280" />
+  <p><strong>buchida Python SDK — Email API for AI agents</strong></p>
 
-**buchida Python SDK — Email API for AI agents**
+  [**English**](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh.md)
+
+  [![PyPI version](https://img.shields.io/pypi/v/buchida)](https://pypi.org/project/buchida) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+</div>
+
+---
 
 buchida is the official Python SDK for **buchida** — an email API built for AI agents. buchida ships a CLI, an MCP server, and SDKs in 5 languages (Node, Python, Go, Ruby, Java), all sharing the same REST API surface. `@buchida/email` templates render Korean, Japanese, and Chinese natively.
 
