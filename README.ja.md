@@ -20,12 +20,15 @@ pip install buchida
 ## 最初のメールを送信
 
 ```python
-import buchida
+import os
 
-client = buchida.Client(api_key=os.environ["BUCHIDA_API_KEY"])
+from buchida import Buchida
+
+client = Buchida(os.environ["BUCHIDA_API_KEY"])
 
 client.emails.send(
     from_="hello@yourapp.com",
+    from_name="Your App",
     to="user@example.com",
     subject="こんにちは",
     html="<h1>ようこそ</h1>",

@@ -20,12 +20,15 @@ pip install buchida
 ## 첫 이메일 보내기
 
 ```python
-import buchida
+import os
 
-client = buchida.Client(api_key=os.environ["BUCHIDA_API_KEY"])
+from buchida import Buchida
+
+client = Buchida(os.environ["BUCHIDA_API_KEY"])
 
 client.emails.send(
     from_="hello@yourapp.com",
+    from_name="Your App",
     to="user@example.com",
     subject="안녕하세요",
     html="<h1>환영합니다</h1>",

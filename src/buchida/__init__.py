@@ -1,4 +1,5 @@
 from buchida.client import Buchida
+from buchida.types import BatchItem, BatchResponse, ListResponse, SendResult
 from buchida.errors import (
     AuthenticationError,
     BuchidaError,
@@ -9,6 +10,10 @@ from buchida.errors import (
 
 __all__ = [
     "Buchida",
+    "BatchItem",
+    "BatchResponse",
+    "ListResponse",
+    "SendResult",
     "BuchidaError",
     "AuthenticationError",
     "RateLimitError",
@@ -16,4 +21,4 @@ __all__ = [
     "ValidationError",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

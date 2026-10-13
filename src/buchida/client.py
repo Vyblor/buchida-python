@@ -21,6 +21,10 @@ from buchida.types import (
     SendEmailParams,
     Template,
     Webhook,
+    BatchResponse,
+    ListResponse,
+    SendResult,
+    unwrap,
 )
 
 DEFAULT_BASE_URL = "https://api.buchida.com/v1"
@@ -66,7 +70,7 @@ class Buchida:
             headers={
                 "Authorization": f"Bearer {self._api_key}",
                 "Content-Type": "application/json",
-                "User-Agent": "buchida-python/0.1.0",
+                "User-Agent": "buchida-python/0.2.0",
             },
         )
 
@@ -78,7 +82,11 @@ class Buchida:
         except urllib.error.HTTPError as e:
             try:
                 error_body = json.loads(e.read().decode("utf-8"))
-                message = error_body.get("message", e.reason)
+                err = error_body.get("error")
+                if isinstance(err, dict):
+                    message = err.get("message", e.reason)
+                else:
+                    message = error_body.get("message", e.reason)
             except Exception:
                 message = e.reason
             raise self._make_error(e.code, message) from None
@@ -115,7 +123,8 @@ class _Emails:
         bcc: str | list[str] | None = None,
         tags: dict[str, str] | None = None,
         scheduled_at: str | None = None,
-    ) -> dict[str, str]:
+        from_name: str | None = None,
+    ) -> SendResult:
         params = SendEmailParams(
             from_=from_,
             to=to,
@@ -127,8 +136,10 @@ class _Emails:
             bcc=bcc,
             tags=tags,
             scheduled_at=scheduled_at,
+            from_name=from_name,
         )
-        return self._client._request("POST", "/emails", params.to_dict())
+        resp = self._client._request("POST", "/emails", params.to_dict())
+        return SendResult(unwrap(resp) or {})
 
     def get(self, email_id: str) -> Email:
         data = self._client._request("GET", f"/emails/{email_id}")
@@ -142,7 +153,7 @@ class _Emails:
         status: str | None = None,
         from_: str | None = None,
         to: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> ListResponse:
         params: dict[str, str] = {}
         if cursor:
             params["cursor"] = cursor
@@ -156,13 +167,16 @@ class _Emails:
             params["to"] = to
         qs = urllib.parse.urlencode(params)
         path = f"/emails?{qs}" if qs else "/emails"
-        return self._client._request("GET", path)
+        return ListResponse.from_envelope(self._client._request("GET", path))
 
     def cancel(self, email_id: str) -> None:
         self._client._request("POST", f"/emails/{email_id}/cancel")
 
-    def send_batch(self, emails: list[dict[str, Any]]) -> list[dict[str, str]]:
-        return self._client._request("POST", "/emails/batch", emails)
+    def send_batch(self, emails: list[dict[str, Any]]) -> BatchResponse:
+        """Send up to 100 emails; returns one ``{"data": ...}`` / ``{"error": ...}`` per input."""
+        return BatchResponse.from_envelope(
+            self._client._request("POST", "/emails/batch", emails)
+        )
 
 
 class _Domains:
@@ -171,12 +185,11 @@ class _Domains:
 
     def create(self, *, name: str) -> Domain:
         resp = self._client._request("POST", "/domains", {"name": name})
-        data = resp.get("data", resp) if isinstance(resp, dict) and "data" in resp else resp
-        return Domain.from_dict(data)
+        return Domain.from_dict(resp)
 
     def list(self) -> list[Domain]:
         resp = self._client._request("GET", "/domains")
-        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        items = unwrap(resp)
         return [Domain.from_dict(d) for d in items]
 
     def get(self, domain_id: str) -> Domain:
@@ -200,7 +213,7 @@ class _ApiKeys:
 
     def list(self) -> list[ApiKey]:
         resp = self._client._request("GET", "/api-keys")
-        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        items = unwrap(resp)
         return [ApiKey.from_dict(d) for d in items]
 
     def delete(self, key_id: str) -> None:
@@ -219,7 +232,7 @@ class _Webhooks:
 
     def list(self) -> list[Webhook]:
         resp = self._client._request("GET", "/webhooks")
-        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        items = unwrap(resp)
         return [Webhook.from_dict(d) for d in items]
 
     def delete(self, webhook_id: str) -> None:
@@ -232,7 +245,7 @@ class _Templates:
 
     def list(self) -> list[Template]:
         resp = self._client._request("GET", "/templates")
-        items = resp.get("data", resp) if isinstance(resp, dict) else resp
+        items = unwrap(resp)
         return [Template.from_dict(d) for d in items]
 
     def get(self, template_id: str) -> Template:
@@ -251,7 +264,8 @@ class _Metrics:
         to: str,
         granularity: str | None = None,
     ) -> Metrics:
-        params: dict[str, str] = {"from": from_, "to": to}
+        # The API filters on from_date/to_date; plain from/to were silently ignored.
+        params: dict[str, str] = {"from_date": from_, "to_date": to}
         if granularity:
             params["granularity"] = granularity
         qs = urllib.parse.urlencode(params)
