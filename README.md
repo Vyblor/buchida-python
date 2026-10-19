@@ -42,6 +42,10 @@ for item in page:
 if page.has_more:
     next_page = client.emails.list(cursor=page.cursor)
 
+# Filters: from_/to are sender/recipient ADDRESSES; from_date/to_date are ISO 8601 dates
+client.emails.list(from_="hello@yourapp.com", from_date="2026-01-01", direction="outbound")
+client.templates.list(status="published", search="welcome")
+
 # Batch: one result per input, each with .data or .error
 for r in client.emails.send_batch([
     {"from": "hello@yourapp.com", "to": "a@example.com", "subject": "A", "text": "hi"},

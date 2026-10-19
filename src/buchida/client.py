@@ -70,7 +70,7 @@ class Buchida:
             headers={
                 "Authorization": f"Bearer {self._api_key}",
                 "Content-Type": "application/json",
-                "User-Agent": "buchida-python/0.2.0",
+                "User-Agent": "buchida-python/0.2.1",
             },
         )
 
@@ -153,7 +153,16 @@ class _Emails:
         status: str | None = None,
         from_: str | None = None,
         to: str | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        direction: str | None = None,
     ) -> ListResponse:
+        """List emails.
+
+        ``from_`` / ``to`` filter by sender / recipient *address* (not dates).
+        ``from_date`` / ``to_date`` (ISO 8601) filter by creation date;
+        ``direction`` is ``"inbound"`` or ``"outbound"``.
+        """
         params: dict[str, str] = {}
         if cursor:
             params["cursor"] = cursor
@@ -165,6 +174,12 @@ class _Emails:
             params["from"] = from_
         if to:
             params["to"] = to
+        if from_date:
+            params["from_date"] = from_date
+        if to_date:
+            params["to_date"] = to_date
+        if direction:
+            params["direction"] = direction
         qs = urllib.parse.urlencode(params)
         path = f"/emails?{qs}" if qs else "/emails"
         return ListResponse.from_envelope(self._client._request("GET", path))
@@ -243,8 +258,20 @@ class _Templates:
     def __init__(self, client: Buchida):
         self._client = client
 
-    def list(self) -> list[Template]:
-        resp = self._client._request("GET", "/templates")
+    def list(
+        self,
+        *,
+        status: str | None = None,
+        search: str | None = None,
+    ) -> list[Template]:
+        """List templates. ``status`` is ``"draft"`` or ``"published"``; ``search`` matches name/subject."""
+        params: dict[str, str] = {}
+        if status:
+            params["status"] = status
+        if search:
+            params["search"] = search
+        qs = urllib.parse.urlencode(params)
+        resp = self._client._request("GET", f"/templates?{qs}" if qs else "/templates")
         items = unwrap(resp)
         return [Template.from_dict(d) for d in items]
 

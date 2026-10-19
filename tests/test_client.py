@@ -1,6 +1,7 @@
 import json
 import warnings
 import urllib.error
+import urllib.parse
 import urllib.request
 from io import BytesIO
 from unittest.mock import MagicMock, patch
@@ -175,6 +176,49 @@ class TestEmails:
         assert not result[1].ok
         assert result[1].error["code"] == "invalid_email_address"
         assert result[1]["error"]["message"] == "bad to"
+
+
+class TestListFilters:
+    @staticmethod
+    def _url(mock_urlopen):
+        req = mock_urlopen.call_args[0][0]
+        return urllib.parse.urlsplit(req.full_url)
+
+    @patch("urllib.request.urlopen")
+    def test_emails_list_no_params_has_no_query(self, mock_urlopen):
+        mock_urlopen.return_value = _mock_response(200, {"data": [], "hasMore": False})
+        Buchida("bc_test_xxx").emails.list()
+        assert self._url(mock_urlopen).query == ""
+
+    @patch("urllib.request.urlopen")
+    def test_emails_list_from_to_unchanged_and_new_params(self, mock_urlopen):
+        mock_urlopen.return_value = _mock_response(200, {"data": [], "hasMore": False})
+        Buchida("bc_test_xxx").emails.list(
+            from_="a+b@x.com",
+            to="c@y.com",
+            from_date="2026-01-01",
+            to_date="2026-02-01",
+            direction="inbound",
+        )
+        q = urllib.parse.parse_qs(self._url(mock_urlopen).query)
+        assert q["from"] == ["a+b@x.com"]
+        assert q["to"] == ["c@y.com"]
+        assert q["from_date"] == ["2026-01-01"]
+        assert q["to_date"] == ["2026-02-01"]
+        assert q["direction"] == ["inbound"]
+
+    @patch("urllib.request.urlopen")
+    def test_templates_list_no_params_has_no_query(self, mock_urlopen):
+        mock_urlopen.return_value = _mock_response(200, {"data": []})
+        Buchida("bc_test_xxx").templates.list()
+        assert self._url(mock_urlopen).query == ""
+
+    @patch("urllib.request.urlopen")
+    def test_templates_list_status_search(self, mock_urlopen):
+        mock_urlopen.return_value = _mock_response(200, {"data": []})
+        Buchida("bc_test_xxx").templates.list(status="published", search="hi")
+        q = urllib.parse.parse_qs(self._url(mock_urlopen).query)
+        assert q == {"status": ["published"], "search": ["hi"]}
 
 
 class TestDomains:
